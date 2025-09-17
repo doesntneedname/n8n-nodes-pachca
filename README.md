@@ -17,7 +17,7 @@
 
 1. Скачайте архив с нодой:
 ```bash
-wget https://github.com/doesntneedname/n8n-nodes-pachca/releases/latest/download/pachca-node.tar.gz
+wget https://github.com/doesntneedname/n8n-nodes-pachca/releases/latest/download/pachca-node-v1.0.1.tar.gz
 ```
 
 2. Распакуйте в директорию custom nodes:
