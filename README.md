@@ -48,11 +48,6 @@ npm install
 npm run build
 ```
 
-4. Скопируйте в директорию n8n:
-```bash
-cp -r dist /path/to/n8n/custom-nodes/n8n-nodes-pachca
-```
-
 ## ⚙️ Настройка
 
 ### 1. Создание Credentials
