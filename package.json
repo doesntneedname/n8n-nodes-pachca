@@ -1,0 +1,67 @@
+{
+  "name": "n8n-nodes-pachca",
+  "version": "1.0.0",
+  "description": "Кастомная нода n8n для интеграции с API мессенджера Pachca. Поддерживает управление пользователями, сообщениями, чатами, файлами и другими ресурсами.",
+  "keywords": [
+    "n8n-community-node-package",
+    "pachca",
+    "messenger",
+    "automation",
+    "workflow",
+    "chat",
+    "messages",
+    "users",
+    "files",
+    "api",
+    "integration"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/froge/n8n-nodes-pachca#readme",
+  "author": {
+    "name": "Froge",
+    "email": "froge@example.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/froge/n8n-nodes-pachca.git"
+  },
+  "bugs": {
+    "url": "https://github.com/froge/n8n-nodes-pachca/issues"
+  },
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc && npm run copy-icons",
+    "copy-icons": "cp -r nodes/*/icons dist/nodes/ 2>/dev/null || true",
+    "dev": "tsc --watch",
+    "format": "prettier nodes credentials --write",
+    "lint": "eslint nodes credentials package.json",
+    "lintfix": "eslint nodes credentials package.json --fix",
+    "prepublishOnly": "npm run build && npm run lint -s"
+  },
+  "files": [
+    "dist"
+  ],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "credentials": [
+      "dist/credentials/PachcaApi.credentials.js"
+    ],
+    "nodes": [
+      "dist/nodes/Pachca/Pachca.node.js"
+    ]
+  },
+  "dependencies": {
+    "n8n-workflow": "^1.82.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.1",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "prettier": "^3.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
+  }
+}

@@ -1,0 +1,67 @@
+1. message 
+Send 
+Update 
+Get All By Chat
+Get By ID
+Get Read Members 
+Pin
+Unpin
+Delete
+
+2. Thread
+Create Thread
+Get Thread
+
+3. Reactions
+Add Reaction
+Delete Reaction
+Get Reactions
+
+4. Chat 
+Get All 
+Get By ID
+Create
+Update
+Add Users
+Remove User
+Get Members
+Update Role 
+Archive
+Unarchive
+Leave Chat
+
+5.User
+Get All 
+Get By ID
+Create
+Update
+Delete 
+
+6. Group Tag
+Get All 
+Get By ID
+Create
+Update
+Add Tags
+Remove Tags
+Get Users
+Delete
+
+
+7. Status (вместо Profile)
+Get Profile
+Get Status
+Update Status
+Delete Status
+
+8. Custom Fields (вместо Field)
+Get Custom Properties
+
+9. Task 
+Create
+
+10. Bot 
+Update
+
+11. File
+Upload

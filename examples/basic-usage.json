@@ -1,0 +1,60 @@
+{
+  "name": "Pachca Basic Usage Example",
+  "nodes": [
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "entityType": "discussion",
+        "entityId": 123,
+        "content": "Привет из n8n! 🚀"
+      },
+      "id": "pachca-send-message",
+      "name": "Send Message",
+      "type": "n8n-nodes-pachca.pachca",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "credentials": {
+        "pachcaApi": {
+          "id": "1",
+          "name": "Pachca API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "user",
+        "operation": "getAll",
+        "per": 10,
+        "page": 1
+      },
+      "id": "pachca-get-users",
+      "name": "Get Users",
+      "type": "n8n-nodes-pachca.pachca",
+      "typeVersion": 1,
+      "position": [460, 300],
+      "credentials": {
+        "pachcaApi": {
+          "id": "1",
+          "name": "Pachca API"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Send Message": {
+      "main": [
+        [
+          {
+            "node": "Get Users",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "versionId": "1"
+}
