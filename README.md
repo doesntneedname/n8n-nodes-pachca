@@ -48,6 +48,11 @@ npm install
 npm run build
 ```
 
+4. Перезапустите n8n:
+```bash
+docker restart n8n-container
+```
+
 ## ⚙️ Настройка
 
 ### 1. Создание Credentials
