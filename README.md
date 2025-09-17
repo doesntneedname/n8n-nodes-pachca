@@ -17,7 +17,7 @@
 
 1. Скачайте архив с нодой:
 ```bash
-wget https://github.com/your-repo/n8n-nodes-pachca/releases/latest/download/pachca-node.tar.gz
+wget https://github.com/doesntneedname/n8n-nodes-pachca/releases/latest/download/pachca-node.tar.gz
 ```
 
 2. Распакуйте в директорию custom nodes:
@@ -34,7 +34,7 @@ docker restart n8n-container
 
 1. Клонируйте репозиторий:
 ```bash
-git clone https://github.com/your-repo/n8n-nodes-pachca.git
+git clone https://github.com/doesntneedname/n8n-nodes-pachca.git
 cd n8n-nodes-pachca
 ```
 
@@ -306,7 +306,7 @@ cp -r dist /path/to/n8n/custom-nodes/n8n-nodes-pachca
 
 ### Получение помощи
 
-- **GitHub Issues**: [Создать issue](https://github.com/your-repo/n8n-nodes-pachca/issues)
+- **GitHub Issues**: [Создать issue](https://github.com/doesntneedname/n8n-nodes-pachca/issues)
 - **Документация Pachca API**: [api.pachca.com](https://api.pachca.com)
 - **n8n Community**: [community.n8n.io](https://community.n8n.io)
 

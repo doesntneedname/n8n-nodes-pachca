@@ -16,17 +16,17 @@
     "integration"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/froge/n8n-nodes-pachca#readme",
+  "homepage": "https://github.com/doesntneedname/n8n-nodes-pachca#readme",
   "author": {
-    "name": "Froge",
-    "email": "froge@example.com"
+    "name": "doesntneedname",
+    "email": "doesntneedname@example.com"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/froge/n8n-nodes-pachca.git"
+    "url": "git+https://github.com/doesntneedname/n8n-nodes-pachca.git"
   },
   "bugs": {
-    "url": "https://github.com/froge/n8n-nodes-pachca/issues"
+    "url": "https://github.com/doesntneedname/n8n-nodes-pachca/issues"
   },
   "main": "index.js",
   "scripts": {

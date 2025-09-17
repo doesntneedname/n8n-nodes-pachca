@@ -119,7 +119,7 @@
 ## 📞 Поддержка
 
 ### Получение помощи
-- **GitHub Issues**: [Создать issue](https://github.com/froge/n8n-nodes-pachca/issues)
+- **GitHub Issues**: [Создать issue](https://github.com/doesntneedname/n8n-nodes-pachca/issues)
 - **Документация Pachca**: [api.pachca.com](https://api.pachca.com)
 - **n8n Community**: [community.n8n.io](https://community.n8n.io)
 
