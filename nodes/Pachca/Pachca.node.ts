@@ -396,7 +396,7 @@ export class Pachca implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Pachca',
 		name: 'pachca',
-		icon: 'file:./icons/Pachca_white_mark.png',
+		icon: 'fa:comments',
 		group: ['transform'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
@@ -3048,8 +3048,8 @@ export class Pachca implements INodeType {
 									method: 'POST',
 									url: `${credentials?.baseUrl}/chats`,
 									body: {
-										chat: {
-											name: chatName,
+									chat: {
+										name: chatName,
 											channel: channel,
 											public: publicChat,
 										},
