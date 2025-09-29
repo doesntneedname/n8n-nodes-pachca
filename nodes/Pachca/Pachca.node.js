@@ -2841,7 +2841,7 @@ class Pachca {
                                 const content = this.getNodeParameter('content', i);
                                 const buttons = this.getNodeParameter('buttons', i);
                                 const sendButtonFormat = this.getNodeParameter('sendButtonFormat', i);
-                                const sendRawButtons = this.getNodeParameter('sendRawButtons', i);
+                                const sendRawButtons = sendButtonFormat === 'raw' ? this.getNodeParameter('sendRawButtons', i) : null;
                                 // Валидация параметров
                                 if (!entityId || entityId === '') {
                                     throw new n8n_workflow_1.NodeOperationError(this.getNode(), 'Entity ID is required for sending messages');
@@ -2850,10 +2850,10 @@ class Pachca {
                                     throw new n8n_workflow_1.NodeOperationError(this.getNode(), 'Content is required for sending messages');
                                 }
                                 // Формируем массив кнопок
-                                let buttonRows = [];
+                                let buttonRows = null;
                                 
                                 if (sendButtonFormat === 'raw' && sendRawButtons) {
-                                    // Используем Raw JSON
+                                    // Используем Raw JSON - всегда передаем, даже если пустой
                                     try {
                                         buttonRows = JSON.parse(sendRawButtons);
                                     } catch (error) {
@@ -2873,8 +2873,9 @@ class Pachca {
                                         buttonArray = buttons.map(item => item.button).filter(Boolean);
                                     }
                                     
-                                    // Обрабатываем кнопки в зависимости от формата
+                                    // Обрабатываем кнопки в зависимости от формата только если есть кнопки
                                     if (buttonArray.length > 0) {
+                                        buttonRows = [];
                                         if (sendButtonFormat === 'row') {
                                             // Все кнопки в одну строку
                                             const row = [];
@@ -2914,13 +2915,14 @@ class Pachca {
                                             }
                                         }
                                     }
+                                    // Если кнопок нет, buttonRows остается null
                                 }
                                 // Отладочная информация
                                 const debugInfo = {
                                     timestamp: new Date().toISOString(),
                                     rawButtons: buttons,
                                     processedButtonRows: buttonRows,
-                                    buttonRowsLength: buttonRows.length,
+                                    buttonRowsLength: buttonRows ? buttonRows.length : 0,
                                     entityType,
                                     entityId,
                                     content
@@ -2938,7 +2940,8 @@ class Pachca {
                                         content: content,
                                     }
                                 };
-                                if (buttonRows.length > 0) {
+                                // Добавляем кнопки только если они есть (не null)
+                                if (buttonRows !== null) {
                                     messageBody.message.buttons = buttonRows;
                                     console.log('Added buttons to message body');
                                     fs.appendFileSync(logFile, 'BUTTONS ADDED TO MESSAGE BODY\n');
@@ -2978,13 +2981,13 @@ class Pachca {
                                 const updateContent = this.getNodeParameter('content', i);
                                 const updateButtons = this.getNodeParameter('buttons', i);
                                 const updateButtonFormat = this.getNodeParameter('buttonFormat', i);
-                                const updateRawButtons = this.getNodeParameter('rawButtons', i);
+                                const updateRawButtons = updateButtonFormat === 'raw' ? this.getNodeParameter('rawButtons', i) : null;
                                 
                                 // Формируем массив кнопок для обновления
-                                let updateButtonRows = [];
+                                let updateButtonRows = null;
                                 
                                 if (updateButtonFormat === 'raw' && updateRawButtons) {
-                                    // Используем Raw JSON
+                                    // Используем Raw JSON - всегда передаем, даже если пустой
                                     try {
                                         updateButtonRows = JSON.parse(updateRawButtons);
                                     } catch (error) {
@@ -3004,8 +3007,9 @@ class Pachca {
                                         buttonArray = updateButtons.map(item => item.button).filter(Boolean);
                                     }
                                     
-                                    // Обрабатываем кнопки в зависимости от формата
+                                    // Обрабатываем кнопки в зависимости от формата только если есть кнопки
                                     if (buttonArray.length > 0) {
+                                        updateButtonRows = [];
                                         if (updateButtonFormat === 'row') {
                                             // Все кнопки в одну строку
                                             const row = [];
@@ -3045,6 +3049,7 @@ class Pachca {
                                             }
                                         }
                                     }
+                                    // Если кнопок нет, updateButtonRows остается null
                                 }
                                 
                                 // Формируем тело сообщения для обновления
@@ -3056,7 +3061,8 @@ class Pachca {
                                     updateMessageBody.message.content = updateContent;
                                 }
                                 
-                                if (updateButtonRows.length > 0) {
+                                // Добавляем кнопки только если они есть (не null)
+                                if (updateButtonRows !== null) {
                                     updateMessageBody.message.buttons = updateButtonRows;
                                 }
                                 
