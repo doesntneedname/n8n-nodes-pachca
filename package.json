@@ -31,7 +31,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc && npm run copy-icons && npm run setup-n8n",
-    "copy-icons": "mkdir -p dist/nodes/Pachca && cp nodes/Pachca/icons/Pachca_white_mark.png dist/nodes/Pachca/ && cp nodes/Pachca/icons/Pachca_dark_mark.png dist/nodes/Pachca/ && cp nodes/Pachca/icons/pachca-adaptive.svg dist/nodes/Pachca/",
+    "copy-icons": "mkdir -p dist/nodes/Pachca && cp nodes/Pachca/icons/Pachca_white_mark.png dist/nodes/Pachca/",
     "setup-n8n": "mkdir -p dist/n8n-structure/nodes/Pachca dist/n8n-structure/credentials && cp dist/nodes/Pachca/Pachca.node.js dist/n8n-structure/nodes/Pachca/ && cp dist/nodes/Pachca/Pachca_white_mark.png dist/n8n-structure/nodes/Pachca/ && cp dist/credentials/PachcaApi.credentials.js dist/n8n-structure/credentials/ && cp package.json dist/n8n-structure/",
     "dev": "tsc --watch",
     "format": "prettier nodes credentials --write",
