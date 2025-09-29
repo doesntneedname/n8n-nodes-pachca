@@ -1102,6 +1102,33 @@ export class Pachca implements INodeType {
 				description: 'Прикрепляемые файлы',
 			},
 			{
+				displayName: 'Button Layout',
+				name: 'buttonLayout',
+				type: 'options',
+				options: [
+					{
+						name: 'Single Row (все кнопки в одну строку)',
+						value: 'single_row'
+					},
+					{
+						name: 'Multiple Rows (каждая кнопка в отдельную строку)',
+						value: 'multiple_rows'
+					},
+					{
+						name: 'Custom Layout (настраиваемое расположение)',
+						value: 'custom'
+					}
+				],
+				default: 'single_row',
+				displayOptions: {
+					show: {
+						resource: ['message'],
+						operation: ['send', 'update'],
+					}
+				},
+				description: 'Способ расположения кнопок'
+			},
+			{
 				displayName: 'Buttons',
 				name: 'buttons',
 				type: 'fixedCollection',
@@ -1117,8 +1144,8 @@ export class Pachca implements INodeType {
 				},
 				options: [
 					{
-						name: 'buttonRow',
-						displayName: 'Button Row',
+						name: 'button',
+						displayName: 'Button',
 						values: [
 							{
 								displayName: 'Button Text',
@@ -2849,6 +2876,7 @@ export class Pachca implements INodeType {
 								const entityId = this.getNodeParameter('entityId', i);
 								const content = this.getNodeParameter('content', i);
 								const files = this.getNodeParameter('files', i) as any;
+								const buttonLayout = this.getNodeParameter('buttonLayout', i) as string;
 								const buttons = this.getNodeParameter('buttons', i) as any;
 								
 								// Валидация параметров
@@ -2884,49 +2912,72 @@ export class Pachca implements INodeType {
 
 								// Формируем массив кнопок
 								const buttonRows: any[] = [];
-								if (buttons) {
-									// Проверяем, если buttons - это объект с buttonRow (одиночная строка кнопок)
-									if (buttons.buttonRow && Array.isArray(buttons.buttonRow)) {
+								if (buttons && Array.isArray(buttons) && buttons.length > 0) {
+									if (buttonLayout === 'single_row') {
+										// Все кнопки в одну строку
 										const row: any[] = [];
-										for (const button of buttons.buttonRow) {
-											if (button.type === 'data') {
-												row.push({
-													text: button.text,
-													data: button.data
-												});
-											} else if (button.type === 'url') {
-												row.push({
-													text: button.text,
-													url: button.url
-												});
+										for (const buttonItem of buttons) {
+											if (buttonItem.button) {
+												const button = buttonItem.button;
+												if (button.type === 'data') {
+													row.push({
+														text: button.text,
+														data: button.data
+													});
+												} else if (button.type === 'url') {
+													row.push({
+														text: button.text,
+														url: button.url
+													});
+												}
 											}
 										}
 										if (row.length > 0) {
 											buttonRows.push(row);
 										}
-									}
-									// Проверяем, если buttons - это массив строк кнопок
-									else if (Array.isArray(buttons) && buttons.length > 0) {
-										for (const buttonRow of buttons) {
-											const row: any[] = [];
-											if (buttonRow.buttonRow && Array.isArray(buttonRow.buttonRow)) {
-												for (const button of buttonRow.buttonRow) {
-													if (button.type === 'data') {
-														row.push({
-															text: button.text,
-															data: button.data
-														});
-													} else if (button.type === 'url') {
-														row.push({
-															text: button.text,
-															url: button.url
-														});
-													}
+									} else if (buttonLayout === 'multiple_rows') {
+										// Каждая кнопка в отдельную строку
+										for (const buttonItem of buttons) {
+											if (buttonItem.button) {
+												const button = buttonItem.button;
+												const row: any[] = [];
+												if (button.type === 'data') {
+													row.push({
+														text: button.text,
+														data: button.data
+													});
+												} else if (button.type === 'url') {
+													row.push({
+														text: button.text,
+														url: button.url
+													});
+												}
+												if (row.length > 0) {
+													buttonRows.push(row);
 												}
 											}
-											if (row.length > 0) {
-												buttonRows.push(row);
+										}
+									} else if (buttonLayout === 'custom') {
+										// Настраиваемое расположение (пока что как single_row)
+										const row: any[] = [];
+										for (const buttonItem of buttons) {
+											if (buttonItem.button) {
+												const button = buttonItem.button;
+												if (button.type === 'data') {
+													row.push({
+														text: button.text,
+														data: button.data
+													});
+												} else if (button.type === 'url') {
+													row.push({
+														text: button.text,
+														url: button.url
+													});
+												}
 											}
+										}
+										if (row.length > 0) {
+											buttonRows.push(row);
 										}
 									}
 								}
@@ -3008,6 +3059,7 @@ export class Pachca implements INodeType {
 								const updateMessageId = this.getNodeParameter('messageId', i) as number;
 								const updateContent = this.getNodeParameter('content', i);
 								const updateFiles = this.getNodeParameter('files', i) as any;
+								const updateButtonLayout = this.getNodeParameter('buttonLayout', i) as string;
 								const updateButtons = this.getNodeParameter('buttons', i) as any;
 
 								// Формируем массив файлов для обновления
@@ -3035,49 +3087,72 @@ export class Pachca implements INodeType {
 
 								// Формируем массив кнопок для обновления
 								const updateButtonRows: any[] = [];
-								if (updateButtons) {
-									// Проверяем, если buttons - это объект с buttonRow (одиночная строка кнопок)
-									if (updateButtons.buttonRow && Array.isArray(updateButtons.buttonRow)) {
+								if (updateButtons && Array.isArray(updateButtons) && updateButtons.length > 0) {
+									if (updateButtonLayout === 'single_row') {
+										// Все кнопки в одну строку
 										const row: any[] = [];
-										for (const button of updateButtons.buttonRow) {
-											if (button.type === 'data') {
-												row.push({
-													text: button.text,
-													data: button.data
-												});
-											} else if (button.type === 'url') {
-												row.push({
-													text: button.text,
-													url: button.url
-												});
+										for (const buttonItem of updateButtons) {
+											if (buttonItem.button) {
+												const button = buttonItem.button;
+												if (button.type === 'data') {
+													row.push({
+														text: button.text,
+														data: button.data
+													});
+												} else if (button.type === 'url') {
+													row.push({
+														text: button.text,
+														url: button.url
+													});
+												}
 											}
 										}
 										if (row.length > 0) {
 											updateButtonRows.push(row);
 										}
-									}
-									// Проверяем, если buttons - это массив строк кнопок
-									else if (Array.isArray(updateButtons) && updateButtons.length > 0) {
-										for (const buttonRow of updateButtons) {
-											const row: any[] = [];
-											if (buttonRow.buttonRow && Array.isArray(buttonRow.buttonRow)) {
-												for (const button of buttonRow.buttonRow) {
-													if (button.type === 'data') {
-														row.push({
-															text: button.text,
-															data: button.data
-														});
-													} else if (button.type === 'url') {
-														row.push({
-															text: button.text,
-															url: button.url
-														});
-													}
+									} else if (updateButtonLayout === 'multiple_rows') {
+										// Каждая кнопка в отдельную строку
+										for (const buttonItem of updateButtons) {
+											if (buttonItem.button) {
+												const button = buttonItem.button;
+												const row: any[] = [];
+												if (button.type === 'data') {
+													row.push({
+														text: button.text,
+														data: button.data
+													});
+												} else if (button.type === 'url') {
+													row.push({
+														text: button.text,
+														url: button.url
+													});
+												}
+												if (row.length > 0) {
+													updateButtonRows.push(row);
 												}
 											}
-											if (row.length > 0) {
-												updateButtonRows.push(row);
+										}
+									} else if (updateButtonLayout === 'custom') {
+										// Настраиваемое расположение (пока что как single_row)
+										const row: any[] = [];
+										for (const buttonItem of updateButtons) {
+											if (buttonItem.button) {
+												const button = buttonItem.button;
+												if (button.type === 'data') {
+													row.push({
+														text: button.text,
+														data: button.data
+													});
+												} else if (button.type === 'url') {
+													row.push({
+														text: button.text,
+														url: button.url
+													});
+												}
 											}
+										}
+										if (row.length > 0) {
+											updateButtonRows.push(row);
 										}
 									}
 								}
