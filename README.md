@@ -17,12 +17,12 @@
 
 1. Скачайте архив с нодой:
 ```bash
-wget https://github.com/doesntneedname/n8n-nodes-pachca/releases/latest/download/pachca-node-files-buttons-20250929-1305.tar.gz
+wget https://github.com/doesntneedname/n8n-nodes-pachca/releases/latest/download/pachca-node-v2.2.tar.gz
 ```
 
 2. Распакуйте в директорию custom nodes:
 ```bash
-tar -xzf pachca-node-files-buttons-20250929-1305.tar.gz -C /path/to/n8n/custom-nodes/
+tar -xzf pachca-node-v2.2.tar.gz -C /path/to/n8n/custom-nodes/
 ```
 
 3. Перезапустите n8n:
