@@ -1012,6 +1012,96 @@ export class Pachca implements INodeType {
 				description: 'Текст сообщения',
 			},
 			{
+				displayName: 'Files',
+				name: 'files',
+				type: 'fixedCollection',
+				typeOptions: {
+					multipleValues: true,
+				},
+				default: [],
+				displayOptions: {
+					show: {
+						resource: ['message'],
+						operation: ['send', 'update'],
+					}
+				},
+				options: [
+					{
+						name: 'file',
+						displayName: 'File',
+						values: [
+							{
+								displayName: 'File Key',
+								name: 'key',
+								type: 'string',
+								default: '',
+								description: 'Путь к файлу, полученный в результате загрузки файла',
+								required: true,
+							},
+							{
+								displayName: 'File Name',
+								name: 'name',
+								type: 'string',
+								default: '',
+								description: 'Название файла, которое будет отображаться пользователю',
+								required: true,
+							},
+							{
+								displayName: 'File Type',
+								name: 'fileType',
+								type: 'options',
+								options: [
+									{
+										name: 'File',
+										value: 'file',
+									},
+									{
+										name: 'Image',
+										value: 'image',
+									},
+								],
+								default: 'file',
+								description: 'Тип файла',
+								required: true,
+							},
+							{
+								displayName: 'File Size (bytes)',
+								name: 'size',
+								type: 'number',
+								default: 0,
+								description: 'Размер файла в байтах',
+								required: true,
+							},
+							{
+								displayName: 'Width (px)',
+								name: 'width',
+								type: 'number',
+								default: '',
+								displayOptions: {
+									show: {
+										fileType: ['image'],
+									},
+								},
+								description: 'Ширина изображения в пикселях (только для изображений)',
+							},
+							{
+								displayName: 'Height (px)',
+								name: 'height',
+								type: 'number',
+								default: '',
+								displayOptions: {
+									show: {
+										fileType: ['image'],
+									},
+								},
+								description: 'Высота изображения в пикселях (только для изображений)',
+							},
+						],
+					},
+				],
+				description: 'Прикрепляемые файлы',
+			},
+			{
 				displayName: 'Buttons',
 				name: 'buttons',
 				type: 'fixedCollection',
@@ -1022,7 +1112,7 @@ export class Pachca implements INodeType {
 				displayOptions: {
 					show: {
 						resource: ['message'],
-						operation: ['send'],
+						operation: ['send', 'update'],
 					}
 				},
 				options: [
@@ -2758,6 +2848,7 @@ export class Pachca implements INodeType {
 								const entityType = this.getNodeParameter('entityType', i);
 								const entityId = this.getNodeParameter('entityId', i);
 								const content = this.getNodeParameter('content', i);
+								const files = this.getNodeParameter('files', i) as any;
 								const buttons = this.getNodeParameter('buttons', i) as any;
 								
 								// Валидация параметров
@@ -2768,6 +2859,29 @@ export class Pachca implements INodeType {
 									throw new NodeOperationError(this.getNode(), 'Content is required for sending messages');
 								}
 								
+								// Формируем массив файлов
+								const fileArray: any[] = [];
+								if (files && Array.isArray(files) && files.length > 0) {
+									for (const fileItem of files) {
+										if (fileItem.file) {
+											const fileObj: any = {
+												key: fileItem.file.key,
+												name: fileItem.file.name,
+												file_type: fileItem.file.fileType,
+												size: fileItem.file.size,
+											};
+											
+											// Добавляем размеры для изображений
+											if (fileItem.file.fileType === 'image') {
+												if (fileItem.file.width) fileObj.width = fileItem.file.width;
+												if (fileItem.file.height) fileObj.height = fileItem.file.height;
+											}
+											
+											fileArray.push(fileObj);
+										}
+									}
+								}
+
 								// Формируем массив кнопок
 								const buttonRows: any[] = [];
 								if (buttons) {
@@ -2844,6 +2958,16 @@ export class Pachca implements INodeType {
 									}
 								};
 
+								// Добавляем файлы если есть
+								if (fileArray.length > 0) {
+									messageBody.message.files = fileArray;
+									console.log('Added files to message body');
+									fs.appendFileSync(logFile, 'FILES ADDED TO MESSAGE BODY\n');
+								} else {
+									console.log('No files to add');
+									fs.appendFileSync(logFile, 'NO FILES TO ADD\n');
+								}
+
 								if (buttonRows.length > 0) {
 									messageBody.message.buttons = buttonRows;
 									console.log('Added buttons to message body');
@@ -2882,14 +3006,106 @@ export class Pachca implements INodeType {
 								break;
 							case 'update':
 								const updateMessageId = this.getNodeParameter('messageId', i) as number;
+								const updateContent = this.getNodeParameter('content', i);
+								const updateFiles = this.getNodeParameter('files', i) as any;
+								const updateButtons = this.getNodeParameter('buttons', i) as any;
+
+								// Формируем массив файлов для обновления
+								const updateFileArray: any[] = [];
+								if (updateFiles && Array.isArray(updateFiles) && updateFiles.length > 0) {
+									for (const fileItem of updateFiles) {
+										if (fileItem.file) {
+											const fileObj: any = {
+												key: fileItem.file.key,
+												name: fileItem.file.name,
+												file_type: fileItem.file.fileType,
+												size: fileItem.file.size,
+											};
+											
+											// Добавляем размеры для изображений
+											if (fileItem.file.fileType === 'image') {
+												if (fileItem.file.width) fileObj.width = fileItem.file.width;
+												if (fileItem.file.height) fileObj.height = fileItem.file.height;
+											}
+											
+											updateFileArray.push(fileObj);
+										}
+									}
+								}
+
+								// Формируем массив кнопок для обновления
+								const updateButtonRows: any[] = [];
+								if (updateButtons) {
+									// Проверяем, если buttons - это объект с buttonRow (одиночная строка кнопок)
+									if (updateButtons.buttonRow && Array.isArray(updateButtons.buttonRow)) {
+										const row: any[] = [];
+										for (const button of updateButtons.buttonRow) {
+											if (button.type === 'data') {
+												row.push({
+													text: button.text,
+													data: button.data
+												});
+											} else if (button.type === 'url') {
+												row.push({
+													text: button.text,
+													url: button.url
+												});
+											}
+										}
+										if (row.length > 0) {
+											updateButtonRows.push(row);
+										}
+									}
+									// Проверяем, если buttons - это массив строк кнопок
+									else if (Array.isArray(updateButtons) && updateButtons.length > 0) {
+										for (const buttonRow of updateButtons) {
+											const row: any[] = [];
+											if (buttonRow.buttonRow && Array.isArray(buttonRow.buttonRow)) {
+												for (const button of buttonRow.buttonRow) {
+													if (button.type === 'data') {
+														row.push({
+															text: button.text,
+															data: button.data
+														});
+													} else if (button.type === 'url') {
+														row.push({
+															text: button.text,
+															url: button.url
+														});
+													}
+												}
+											}
+											if (row.length > 0) {
+												updateButtonRows.push(row);
+											}
+										}
+									}
+								}
+
+								// Формируем тело запроса для обновления
+								const updateMessageBody: any = {
+									message: {}
+								};
+
+								// Добавляем контент если указан
+								if (updateContent) {
+									updateMessageBody.message.content = updateContent;
+								}
+
+								// Добавляем файлы если есть
+								if (updateFileArray.length > 0) {
+									updateMessageBody.message.files = updateFileArray;
+								}
+
+								// Добавляем кнопки если есть
+								if (updateButtonRows.length > 0) {
+									updateMessageBody.message.buttons = updateButtonRows;
+								}
+
 								responseData = await this.helpers.httpRequestWithAuthentication.call(this, 'pachcaApi', {
 									method: 'PUT',
 									url: `${credentials?.baseUrl}/messages/${updateMessageId}`,
-									body: {
-										message: {
-											content: this.getNodeParameter('content', i),
-										},
-									},
+									body: updateMessageBody,
 								});
 								break;
 							case 'delete':
